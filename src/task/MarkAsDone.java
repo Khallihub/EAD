@@ -1,29 +1,29 @@
-package ors;
+package task;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class MarkAsDone
  */
-public class LoginServlet extends HttpServlet {
+@WebServlet("/MarkAsDone")
+public class MarkAsDone extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public LoginServlet() {
+	public MarkAsDone() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -44,30 +44,36 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
+		// TODO Auto-generated method stub
+		int id = Integer.parseInt(request.getParameter("taskId"));
+		String status = request.getParameter("status");
+		System.out.print(status);
+		int updatedStatus = 1;
+		if (status.equals("Completed")) {
+			updatedStatus = 0;
+		}
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection(db_config.DB_URL, db_config.DB_USER, db_config.DB_PASSWORD);
-			String query = "select * from users where email = ? AND password = ?";
-			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, email);
-			pstmt.setString(2, password);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				// authentication successful
-				conn.close();
-				HttpSession session = request.getSession();
-				session.setAttribute("email", email);
-				response.sendRedirect("welcome.jsp");
+			String updateQuery = "UPDATE tasks SET status = ? WHERE id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(updateQuery);
+			pstmt.setInt(1, updatedStatus);
+			pstmt.setInt(2, id);
+			int rowsUpdated = pstmt.executeUpdate();
+			if (rowsUpdated > 0) {
+				System.out.println("Task status updated successfully!");
 			} else {
-				// authentication failed
-				conn.close();
-				response.sendRedirect("login.jsp");
+				System.out.println("No task found with the given ID.");
 			}
+
+			conn.close();
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/LoginServlet");
+			dispatcher.forward(request, response);
 		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 }

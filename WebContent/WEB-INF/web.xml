@@ -16,7 +16,7 @@
 		<description></description>
 		<display-name>RegistrationServlet</display-name>
 		<servlet-name>RegistrationServlet</servlet-name>
-		<servlet-class>ors.RegistrationServlet</servlet-class>
+		<servlet-class>task.RegistrationServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>RegistrationServlet</servlet-name>
@@ -25,7 +25,7 @@
 	<servlet>
 		<display-name>LoginServlet</display-name>
 		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>ors.LoginServlet</servlet-class>
+		<servlet-class>task.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>

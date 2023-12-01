@@ -1,4 +1,4 @@
-package ors;
+package task;
 
 public class User {
 	private String name, email, password;
